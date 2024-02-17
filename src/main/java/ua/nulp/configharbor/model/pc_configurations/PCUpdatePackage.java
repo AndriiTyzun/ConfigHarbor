@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.nulp.configharbor.model.components.*;
+import ua.nulp.configharbor.model.components.CPU;
+import ua.nulp.configharbor.model.components.GPU;
+import ua.nulp.configharbor.model.components.RAM;
 
 @Entity
 @Table(name = "update")

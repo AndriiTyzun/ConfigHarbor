@@ -1,5 +1,6 @@
 package ua.nulp.configharbor.model.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,11 +36,19 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String userLastName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "userId")
     private Set<PCConfiguration> configurations;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "userId")
     private Set<UserAuthority> authorities;
+
+    public User(String email, String password) {
+        this.userEmail = email;
+        this.userPassword= password;
+    }
+
 
     @Override
     public String getPassword() {

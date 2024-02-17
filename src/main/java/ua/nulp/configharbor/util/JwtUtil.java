@@ -1,63 +1,96 @@
 package ua.nulp.configharbor.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
+import io.jsonwebtoken.*;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
+import ua.nulp.configharbor.model.users.User;
 
-import java.io.Serial;
-import java.io.Serializable;
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.concurrent.TimeUnit;
 
 @Component
-public class JwtUtil implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -2550185165626007489L;
-
+public class JwtUtil {
+    private SecretKey secret;
+    private final String TOKEN_HEADER = "Authorization";
+    private final String TOKEN_PREFIX = "Bearer ";
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
-
-    @Value("${jwt.secret}")
-    private String secret;
-
-    public String getUsernameFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+    public JwtUtil(){
+        secret = Jwts.SIG.HS256.key().build();
     }
 
-    public Date getExpirationDateFromToken(String token) {
-        return getClaimFromToken(token, Claims::getExpiration);
+    public String createToken(User user) {
+        Map<String, String> claims = new HashMap<>();
+        claims.put("firstName",user.getUserFirstName());
+        claims.put("lastName",user.getUserLastName());
+        Date tokenCreateTime = new Date();
+        Date tokenValidity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(JWT_TOKEN_VALIDITY));
+        return Jwts.builder()
+                .claims(claims)
+                .expiration(tokenValidity)
+                .signWith(secret)
+                .compact();
     }
 
-    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = getAllClaimsFromToken(token);
-        return claimsResolver.apply(claims);
-    }
-    private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-    }
-
-    private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
-    }
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
-    }
-
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
-        String token = Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
-        return token;
+    public Claims resolveClaims(HttpServletRequest req) {
+        try {
+            String token = resolveToken(req);
+            if (token != null) {
+                return parseJwtClaims(token);
+            }
+            return null;
+        } catch (ExpiredJwtException ex) {
+            req.setAttribute("Expired", ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            req.setAttribute("Invalid", ex.getMessage());
+            throw ex;
+        }
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    private Claims parseJwtClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(secret)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    public String resolveToken(HttpServletRequest request) {
+
+        String bearerToken = request.getHeader(TOKEN_HEADER);
+        if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
+            return bearerToken.substring(TOKEN_PREFIX.length());
+        }
+        return null;
+    }
+
+    public boolean validateClaims(Claims claims) throws AuthenticationException {
+        try {
+            return claims.getExpiration().after(new Date());
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public String getEmail(String token) {
+        return Jwts.parser()
+                .verifyWith(secret)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload().getSubject();
+    }
+
+    private List<String> getRoles(String token) {
+        return (List<String>)
+                Jwts.parser()
+                .verifyWith(secret)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload().get("roles");
     }
 }
