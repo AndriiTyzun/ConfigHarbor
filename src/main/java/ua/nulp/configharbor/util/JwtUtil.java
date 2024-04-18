@@ -1,6 +1,7 @@
 package ua.nulp.configharbor.util;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
@@ -15,12 +16,15 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtUtil {
-    private SecretKey secret;
     private final String TOKEN_HEADER = "Authorization";
     private final String TOKEN_PREFIX = "Bearer ";
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    private final SecretKey secret;
+    private final JwtParser jwtParser;
+
     public JwtUtil(){
         secret = Jwts.SIG.HS256.key().build();
+        jwtParser = Jwts.parser().verifyWith(secret).build();
     }
 
     public String createToken(User user) {
@@ -53,9 +57,7 @@ public class JwtUtil {
     }
 
     private Claims parseJwtClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(secret)
-                .build()
+        return jwtParser
                 .parseSignedClaims(token)
                 .getPayload();
     }

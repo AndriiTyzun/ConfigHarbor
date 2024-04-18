@@ -7,16 +7,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ua.nulp.configharbor.model.dto.AuthCredentialsRequest;
 import ua.nulp.configharbor.model.dto.AuthResponse;
 import ua.nulp.configharbor.model.users.User;
 import ua.nulp.configharbor.service.UserService;
 import ua.nulp.configharbor.service.implementation.UserServiceImpl;
 import ua.nulp.configharbor.util.JwtUtil;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -29,6 +28,13 @@ public class AuthController {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+    }
+
+    @GetMapping("/printHeaders")
+    public void getAllHeaders(@RequestHeader Map<String,String> headers){
+        headers.forEach((key,value) ->{
+            System.out.println("Header Name: "+key+" Header Value: "+value);
+        });
     }
 
     @PostMapping("login")

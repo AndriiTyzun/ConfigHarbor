@@ -19,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import ua.nulp.configharbor.controller.filter.JwtFilter;
 
+import java.io.Console;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -32,7 +34,8 @@ public class SecurityConfig {
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder;
     }
 
     @Bean

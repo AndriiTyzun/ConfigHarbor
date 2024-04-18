@@ -51,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            System.out.println("token : "+accessToken);
+            System.out.println("token : " + accessToken);
             Claims claims = jwtUtil.resolveClaims(request);
 
             if(claims != null & jwtUtil.validateClaims(claims)){

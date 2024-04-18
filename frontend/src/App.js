@@ -1,29 +1,26 @@
 import './App.css';
+import {Route, Routes} from "react-router-dom";
+import {useLocalState} from "./util/localStorage";
+import Login from "./components/login";
+import Homepage from "./components/homepage";
+import PrivateRoute from "./util/privateRoute";
+import Configurator from "./components/configurator";
+
 
 function App() {
-  const requestBody = {
-    "userEmail" : "user@gmail.com",
-    "userPassword" : "admin"
-  }
+    const [jwt, setJwt] = useLocalState("", "jwt");
 
-  fetch('api/auth/login', {
-    headers : {
-      "Content-Type" : "application/json"
-    },
-    method : "POST",
-    body : JSON.stringify(requestBody)
-  })
-      .then(response => Promise.all([response.json(), response.headers]))
-      .then(([body, headers]) => {
-        console.log(headers.get("authorization "));
-        console.log(body);
-      });
-
-  return (
-    <div className="App">
-
-    </div>
-  );
+    return (
+      <Routes>
+          <Route path="/configurator" element={
+             <PrivateRoute>
+                 <Configurator/>
+             </PrivateRoute>
+          }/>
+          <Route path="/login" element={<Login/>} />
+          <Route path="/" element={<Homepage/>}/>
+      </Routes>
+    );
 }
 
 export default App;
