@@ -20,19 +20,19 @@ public class CPU extends Component{
     @Column(name = "cores")
     private int cpuCores;
 
-    @Column(name = "threads")
-    private int cpuThreads;
-
-    @Column(name = "clock")
-    private int cpuClock;
+//    @Column(name = "threads")
+//    private int cpuThreads;
+//
+//    @Column(name = "clock")
+//    private int cpuClock;
 
     @Column(name = "socket")
     private String cpuSocket;
 
-    @Column(name = "process")
-    private int cpuProcess;
-
-    @Column(name = "cache")
+//    @Column(name = "process")
+//    private int cpuProcess;
+//
+//    @Column(name = "cache")
     private int cpuCache;
 
     @Column(name = "tdp")

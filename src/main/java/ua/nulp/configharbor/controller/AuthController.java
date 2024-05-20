@@ -7,15 +7,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ua.nulp.configharbor.model.dto.AuthCredentialsRequest;
-import ua.nulp.configharbor.model.dto.AuthResponse;
 import ua.nulp.configharbor.model.users.User;
 import ua.nulp.configharbor.service.UserService;
-import ua.nulp.configharbor.service.implementation.UserServiceImpl;
 import ua.nulp.configharbor.util.JwtUtil;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -30,13 +27,6 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping("/printHeaders")
-    public void getAllHeaders(@RequestHeader Map<String,String> headers){
-        headers.forEach((key,value) ->{
-            System.out.println("Header Name: "+key+" Header Value: "+value);
-        });
-    }
-
     @PostMapping("login")
     public ResponseEntity<?> login (@RequestBody AuthCredentialsRequest request) throws Exception {
         try {
@@ -49,7 +39,6 @@ public class AuthController {
             User user = userService.getUserByEmail(email);
             user.setUserPassword("");
             String token = jwtUtil.createToken(user);
-            AuthResponse authResponse = new AuthResponse(email,token);
 
             return ResponseEntity.ok()
                     .header(
@@ -62,5 +51,30 @@ public class AuthController {
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> signUp(@RequestBody User user) throws Exception {
+        userService.addUser(user);
+        String token = jwtUtil.createToken(user);
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        token
+                ).body(
+                        user
+                );
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> getUser(@AuthenticationPrincipal User user) throws Exception{
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        ""
+                ).body(
+                        user
+                );
     }
 }

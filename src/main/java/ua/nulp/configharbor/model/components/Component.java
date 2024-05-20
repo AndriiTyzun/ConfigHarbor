@@ -9,8 +9,8 @@ public abstract class Component {
     @Column(name = "id")
     private long componentId;
 
-    @Column(name = "brand")
-    private String componentBrand;
+//    @Column(name = "brand")
+//    private String componentBrand;
 
     @Column(name = "model")
     private String componentModel;

@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "requirements")
+@Table(name = "app_requirements")
 @NoArgsConstructor
 @Getter
 @Setter
-public class Requirements {
+public class ApplicationRequirements {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long requirementsId;
+    private long appRequirementsId;
 
     @Column(name = "cpu")
     private String requirementsCPU;
@@ -21,12 +21,6 @@ public class Requirements {
     @Column(name = "gpu")
     private String requirementsGPU;
 
-    @Column(name = "motherboard")
-    private String requirementsMotherboard;
-
     @Column(name = "ram")
     private String requirementsRAM;
-
-    @Column(name = "psu")
-    private String requirementsPSU;
 }

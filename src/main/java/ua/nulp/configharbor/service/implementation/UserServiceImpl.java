@@ -16,4 +16,9 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(String email) throws Exception {
         return userRepository.getUserByUserEmail(email).orElseThrow(() -> new Exception("Invalid credentials"));
     }
+
+    public void addUser(User user) throws Exception {
+        //userRepository.save(user);
+        System.out.println("New USER!");
+    }
 }
