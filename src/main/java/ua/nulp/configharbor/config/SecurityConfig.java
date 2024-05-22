@@ -59,7 +59,6 @@ public class SecurityConfig {
                         .requestMatchers("api/auth/**").permitAll()
                         .requestMatchers("api/users/**").permitAll()
                         .requestMatchers("api/config/**").permitAll()
-                        .requestMatchers("api/ml/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, AuthorizationFilter.class);
