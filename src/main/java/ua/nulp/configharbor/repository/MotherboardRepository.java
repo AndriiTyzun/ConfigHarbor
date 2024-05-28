@@ -6,5 +6,5 @@ import ua.nulp.configharbor.model.components.Motherboard;
 
 @Repository
 public interface MotherboardRepository extends JpaRepository<Motherboard, Long> {
-
+    public Motherboard findMotherboardByMbName(String name);
 }

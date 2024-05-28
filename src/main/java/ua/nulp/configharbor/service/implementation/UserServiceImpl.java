@@ -14,11 +14,10 @@ public class UserServiceImpl implements UserService {
     }
 
     public User getUserByEmail(String email) throws Exception {
-        return userRepository.getUserByUserEmail(email).orElseThrow(() -> new Exception("Invalid credentials"));
+        return userRepository.getUserByUserEmail(email).orElse(null);
     }
 
     public void addUser(User user) throws Exception {
-        //userRepository.save(user);
-        System.out.println("New USER!");
+        userRepository.save(user);
     }
 }

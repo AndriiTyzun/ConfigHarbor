@@ -37,9 +37,12 @@ public class PCConfiguration {
     @JoinColumn(name = "ram_id", referencedColumnName = "id")
     private RAM ram;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "update", referencedColumnName = "id")
-    private PCUpdatePackage update;
+    @Column(name = "rating")
+    private int rating;
+
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "update", referencedColumnName = "id")
+//    private PCUpdatePackage update;
 
     @ManyToOne
     @JoinColumn(name = "userId")

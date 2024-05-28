@@ -35,19 +35,19 @@ class PCConfiguration(BaseModel):
     gpu: str
     ram: str
     psu: str
-    type: str
-    price: float
+    pcType: str
+    pcPrice: float
 
 
-def generate_random_combination(type, max_price):
+def generate_random_combination(pc_type, max_price):
     cpu, gpu, ram, psu, mb, combination = None, None, None, None, None, None
     price = 0
     while True:
+        mb = mb_df.sample()
         cpu = cpu_df.sample()
         gpu = gpu_df.sample()
         ram = ram_df.sample()
         psu = ps_df.sample()
-        mb = mb_df.sample()
         price = cpu['price'].values[0] + mb['price'].values[0] + gpu['price'].values[0] + ram['price'].values[0] + \
                 psu['price'].values[0]
 
@@ -57,25 +57,31 @@ def generate_random_combination(type, max_price):
             'gpu': gpu['gpuName'].values[0],
             'ram': ram['name'].values[0],
             'psu': psu['name'].values[0],
-            'type': type,
+            'type': pc_type,
             'price': price
         }])
 
         rating = model.predict(combination)[0]
-        rating_threshold = types.get(type)
-        if check_compatibility(cpu, mb, gpu, psu, ram) and max_price >= price >= (
-                max_price * 0.7) and rating >= rating_threshold:
+        rating_threshold = types.get(pc_type)
+
+        Acpu = cpu['cpuName'].values[0]
+        Agpu = gpu['gpuName'].values[0]
+        Amb = mb['name'].values[0]
+        Aram = ram['name'].values[0]
+        Apsu = psu['name'].values[0]
+
+        if check_compatibility(cpu, mb, gpu, psu, ram) and max_price >= price and rating >= rating_threshold-5:
             break
 
     return combination
 
 
 def check_compatibility(cpu, motherboard, gpu, psu, ram):
-    if cpu['socket'].values.tolist()[0] != motherboard['socket'].values.tolist()[0]:
+    if cpu['socket'].values[0] != motherboard['socket'].values[0]:
         return False
-    if cpu['TDP'].values.tolist()[0] + gpu['TDP'].values.tolist()[0] > psu['wattage'].values.tolist()[0]:
+    if cpu['TDP'].values[0] + gpu['TDP'].values[0] > psu['wattage'].values[0]:
         return False
-    if ram['planks'].values.tolist()[0] > motherboard['memory_slots'].values.tolist()[0]:
+    if ram['planks'].values[0] > motherboard['memory_slots'].values[0]:
         return False
     return True
 
@@ -90,8 +96,8 @@ def get_recommendation(request: PCRequest):
             gpu=config['gpu'].values[0],
             ram=config['ram'].values[0],
             psu=config['psu'].values[0],
-            type=request.pcType,
-            price=request.pcPrice
+            pcType=config['type'].values[0],
+            pcPrice=config['price'].values[0]
         )
 
         # return PCConfiguration(

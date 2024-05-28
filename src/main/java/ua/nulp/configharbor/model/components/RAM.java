@@ -16,6 +16,9 @@ import ua.nulp.configharbor.model.pc_configurations.PCUpdatePackage;
 @Getter
 @Setter
 public class RAM extends Component{
+    @Column(name = "name")
+    private String ramName;
+
     @Column(name = "total_size")
     private int ramTotalSize;
 

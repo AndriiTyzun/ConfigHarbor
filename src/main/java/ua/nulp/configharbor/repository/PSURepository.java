@@ -6,5 +6,5 @@ import ua.nulp.configharbor.model.components.PSU;
 
 @Repository
 public interface PSURepository extends JpaRepository<PSU, Long> {
-
+    public PSU findPSUByPsuName(String name);
 }

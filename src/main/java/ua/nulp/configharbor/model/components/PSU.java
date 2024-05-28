@@ -15,6 +15,9 @@ import ua.nulp.configharbor.model.pc_configurations.PCConfiguration;
 @Getter
 @Setter
 public class PSU extends Component{
+    @Column(name = "name")
+    private String psuName;
+
     @Column(name = "form_factor")
     private String psuFormFactor;
 

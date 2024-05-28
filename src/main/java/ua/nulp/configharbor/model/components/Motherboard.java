@@ -15,6 +15,9 @@ import ua.nulp.configharbor.model.pc_configurations.PCConfiguration;
 @Getter
 @Setter
 public class Motherboard extends Component{
+    @Column(name = "name")
+    private String mbName;
+
     @Column(name = "socket")
     private String mbSocket;
 

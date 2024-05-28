@@ -24,10 +24,10 @@ public class ConfigController {
     public PCConfigurationDTO getPCConfig(@RequestBody PCRequirements requirements) {
         String url = "http://127.0.0.1:8000/config";
 
-        requirements = new PCRequirements();
-        requirements.setPcType("Gaming");
-        requirements.setPcPrice(2000);
-        requirements.setPcUpgrade(false);
+//        requirements = new PCRequirements();
+//        requirements.setPcType("Gaming");
+//        requirements.setPcPrice(2000);
+//        requirements.setPcUpgrade(false);
         ResponseEntity<PCConfigurationDTO> response = restTemplate.postForEntity(url, requirements, PCConfigurationDTO.class);
         return response.getBody();
     }

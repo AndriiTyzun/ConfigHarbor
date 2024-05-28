@@ -1,7 +1,8 @@
 import {useLocalState} from "../../util/localStorage";
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useHistory hook
+import { useNavigate } from 'react-router-dom';
+import "bootstrap/dist/css/bootstrap.min.css";
 import {
     MDBContainer,
     MDBInput,
@@ -31,15 +32,14 @@ const SignUp = () => {
                 throw new Error("Passwords do not match");
             }
 
-            const response = await axios.post('http://localhost:8080/api/users', {
-                firstName,
-                lastName,
-                email,
-                password,
-                role,
+            const response = await axios.post('http://localhost:8080/api/auth/add', {
+                "userEmail" : email,
+                "userPassword" : password,
+                "userFirstName" : firstName,
+                "userLastName" : lastName
             });
             console.log(response.data);
-            history('/homepage');
+            history('/login');
         } catch (error) {
             console.error('Signup failed:', error.response ? error.response.data : error.message);
             setError(error.response ? error.response.data : error.message);
@@ -108,18 +108,18 @@ const SignUp = () => {
                     <MDBInput wrapperClass='mb-3' placeholder='Confirm Password' id='confirmPassword' type='password'
                               value={confirmPassword}
                               onChange={(e) => setConfirmPassword(e.target.value)}/>
-                    <label className="form-label mb-1">Role:</label>
-                    <select className="form-select mb-4" value={role} onChange={(e) => setRole(e.target.value)}>
-                        <option value="ROLE_CUSTOMER">User</option>
-                        <option value="ROLE_ADMIN">Admin</option>
-                    </select>
+                    {/*<label className="form-label mb-1">Role:</label>*/}
+                    {/*<select className="form-select mb-4" value={role} onChange={(e) => setRole(e.target.value)}>*/}
+                    {/*    <option value="ROLE_CUSTOMER">User</option>*/}
+                    {/*    <option value="ROLE_ADMIN">Admin</option>*/}
+                    {/*</select>*/}
                     <button className="mb-4 d-block mx-auto fixed-action-btn btn-primary"
                             style={{height: '40px', width: '100%'}}
                             onClick={handleSignup}>Sign Up
                     </button>
 
                     <div className="text-center">
-                        <p>Already Register? <a href="/public">Login</a></p>
+                        <p>Already Registered? <a href="/login">Login</a></p>
                     </div>
 
                 </MDBContainer>

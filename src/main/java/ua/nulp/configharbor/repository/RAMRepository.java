@@ -6,5 +6,5 @@ import ua.nulp.configharbor.model.components.RAM;
 
 @Repository
 public interface RAMRepository extends JpaRepository<RAM, Long> {
-
+    public RAM findRAMByRamName(String ramName);
 }

@@ -8,8 +8,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ua.nulp.configharbor.model.dto.AuthCredentialsRequest;
+import ua.nulp.configharbor.model.dto.AuthResponse;
 import ua.nulp.configharbor.model.users.User;
 import ua.nulp.configharbor.service.UserService;
 import ua.nulp.configharbor.util.JwtUtil;
@@ -20,11 +22,13 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("login")
@@ -53,18 +57,22 @@ public class AuthController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping("/add")
     public ResponseEntity<?> signUp(@RequestBody User user) throws Exception {
+        if(userService.getUserByEmail(user.getUserEmail()) != null) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Email already taken");
+        }
+
+        user.setUserPassword(passwordEncoder.encode(user.getPassword()));
         userService.addUser(user);
         String token = jwtUtil.createToken(user);
 
-        return ResponseEntity.ok()
-                .header(
-                        HttpHeaders.AUTHORIZATION,
-                        token
-                ).body(
-                        user
-                );
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setUserEmail(user.getUserEmail());
+        authResponse.setUserToken(token);
+        authResponse.setMessage("Register Success");
+
+        return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.OK);
     }
 
     @GetMapping("")

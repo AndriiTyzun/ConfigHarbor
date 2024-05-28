@@ -39,6 +39,8 @@ public class GPU extends Component{
 //
 //    @Column(name = "shaders_tmu_rop")
 //    private String gpuSTR;
+    @Column(name = "name")
+    private String gpuName;
 
     @Column(name = "tdp")
     private int gpuTDP;

@@ -31,6 +31,6 @@ public class PCUpdatePackage {
     @JoinColumn(name = "ram_id", referencedColumnName = "id")
     private RAM ram;
 
-    @OneToOne(mappedBy = "update")
-    private PCConfiguration pcConfiguration;
+//    @OneToOne(mappedBy = "update")
+//    private PCConfiguration pcConfiguration;
 }

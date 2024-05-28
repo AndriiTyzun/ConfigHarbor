@@ -20,6 +20,10 @@ public class CPU extends Component{
     @Column(name = "cores")
     private int cpuCores;
 
+
+    @Column(name = "name")
+    private String cpuName;
+
 //    @Column(name = "threads")
 //    private int cpuThreads;
 //

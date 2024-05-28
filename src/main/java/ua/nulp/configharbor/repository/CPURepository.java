@@ -6,5 +6,5 @@ import ua.nulp.configharbor.model.components.CPU;
 
 @Repository
 public interface CPURepository extends JpaRepository<CPU, Long> {
-
+    public CPU findCPUByCpuName(String name);
 }

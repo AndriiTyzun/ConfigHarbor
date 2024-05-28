@@ -12,9 +12,6 @@ public abstract class Component {
 //    @Column(name = "brand")
 //    private String componentBrand;
 
-    @Column(name = "model")
-    private String componentModel;
-
     @Column(name = "price")
     private String componentPrice;
 }
