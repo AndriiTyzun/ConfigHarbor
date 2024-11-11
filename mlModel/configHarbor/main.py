@@ -89,6 +89,12 @@ def check_compatibility(cpu, motherboard, gpu, psu, ram):
 @app.post("/config", response_model=PCConfiguration)
 def get_recommendation(request: PCRequest):
     try:
+        if request.pcPrice < 500:
+            request.pcPrice = 500
+
+        if request.pcType == '':
+            request.pcType = 'Gaming'
+
         config = generate_random_combination(request.pcType, request.pcPrice)
         return PCConfiguration(
             cpu=config['cpu'].values[0],
@@ -99,6 +105,8 @@ def get_recommendation(request: PCRequest):
             pcType=config['type'].values[0],
             pcPrice=config['price'].values[0]
         )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
         # return PCConfiguration(
         #     cpu='Intel Core i9-12900K',
@@ -109,8 +117,6 @@ def get_recommendation(request: PCRequest):
         #     type='Professional',
         #     price=2500.00
         # )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
 
 # if __name__ == "__main__":
 #

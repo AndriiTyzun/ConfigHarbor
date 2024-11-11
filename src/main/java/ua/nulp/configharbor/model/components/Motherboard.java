@@ -24,11 +24,12 @@ public class Motherboard extends Component{
     @Column(name = "form_factor")
     private String mbFormFactor;
 
-//    @Column(name = "chipset")
-//    private String mbChipset;
-
     @Column(name = "ram_slots")
     private int mbRAMSlots;
+
+    @OneToOne(mappedBy = "motherboard")
+    private PCConfiguration pcConfiguration;
+}
 
 //    @Column(name = "ram_type")
 //    private String mbRAMType;
@@ -36,6 +37,5 @@ public class Motherboard extends Component{
 //    @Column(name = "usb_slots")
 //    private String mbUSBSlots;
 
-    @OneToOne(mappedBy = "motherboard")
-    private PCConfiguration pcConfiguration;
-}
+//    @Column(name = "chipset")
+//    private String mbChipset;

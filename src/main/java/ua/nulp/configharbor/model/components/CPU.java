@@ -24,20 +24,10 @@ public class CPU extends Component{
     @Column(name = "name")
     private String cpuName;
 
-//    @Column(name = "threads")
-//    private int cpuThreads;
-//
-//    @Column(name = "clock")
-//    private int cpuClock;
 
     @Column(name = "socket")
     private String cpuSocket;
 
-//    @Column(name = "process")
-//    private int cpuProcess;
-//
-//    @Column(name = "cache")
-    private int cpuCache;
 
     @Column(name = "tdp")
     private int cpuTDP;
@@ -51,3 +41,13 @@ public class CPU extends Component{
     @OneToOne(mappedBy = "cpu")
     private PCUpdatePackage pcUpdatePackage;
 }
+//    @Column(name = "threads")
+//    private int cpuThreads;
+//
+//    @Column(name = "clock")
+//    private int cpuClock;
+//    @Column(name = "process")
+//    private int cpuProcess;
+//
+//    @Column(name = "cache")
+//    private int cpuCache;

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Configurator = () => {
     const [pcType, setPcType] = useState('');
-    const [priceRange, setPriceRange] = useState('');
-    const [upgradeable, setUpgradeable] = useState(false);
-    const [overclocking, setOverclocking] = useState(false);
+    const [pcPrice, setPriceRange] = useState(1000.0);
+    const [pcUpgrade, setUpgradeable] = useState(false);
+    const [pcOverclock, setOverclocking] = useState(false);
     const [configuration, setConfiguration] = useState(null);
 
     const pcTypes = [
@@ -15,18 +16,32 @@ const Configurator = () => {
         { value: 'All-in-One', label: 'All-in-One', description: 'Integrated system for multiple uses.' },
     ];
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+        // e.preventDefault();
+        // const staticConfig = {
+        //     cpu: 'Intel Core i7',
+        //     motherboard: 'ASUS Prime Z390-A',
+        //     gpu: 'NVIDIA GeForce RTX 3080',
+        //     psu: 'Corsair RM750x',
+        //     ram: '16GB DDR4',
+        //     type: pcType,
+        //     price: '$1500'
+        // };
+        // setConfiguration(staticConfig);
+
         e.preventDefault();
-        const staticConfig = {
-            cpu: 'Intel Core i7',
-            motherboard: 'ASUS Prime Z390-A',
-            gpu: 'NVIDIA GeForce RTX 3080',
-            psu: 'Corsair RM750x',
-            ram: '16GB DDR4',
-            type: pcType,
-            price: '$1500'
-        };
-        setConfiguration(staticConfig);
+        try {
+            const response = await axios.post('http://localhost:8080/api/config/getPCConfig', {
+                pcType,
+                pcPrice,
+                pcUpgrade,
+                pcOverclock,
+            });
+            console.log(response.data)
+            setConfiguration(response.data);
+        } catch (error) {
+            console.error('Error fetching configuration:', error);
+        }
     };
 
     return (
@@ -35,8 +50,7 @@ const Configurator = () => {
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label className="form-label">Select PC Type</label>
-                    <select className="form-select" value={pcType} onChange={(e) => setPcType(e.target.value)} required>
-                        <option value="">Select...</option>
+                    <select className="form-select" value={pcType}  onChange={(e) => setPcType(e.target.value)} required>
                         {pcTypes.map((type) => (
                             <option key={type.value} value={type.value}>{type.label}</option>
                         ))}
@@ -50,11 +64,11 @@ const Configurator = () => {
                 <div className="mb-3">
                     <label className="form-label">Price Range</label>
                     <input
-                        type="text"
+                        type="number"
                         className="form-control"
-                        value={priceRange}
+                        value={pcPrice}
                         onChange={(e) => setPriceRange(e.target.value)}
-                        placeholder="e.g., $500-$1500"
+                        placeholder="e.g., $1500"
                         required
                     />
                 </div>
@@ -62,7 +76,7 @@ const Configurator = () => {
                     <input
                         type="checkbox"
                         className="form-check-input"
-                        checked={upgradeable}
+                        checked={pcUpgrade}
                         onChange={(e) => setUpgradeable(e.target.checked)}
                         id="upgradeable"
                     />
@@ -72,7 +86,7 @@ const Configurator = () => {
                     <input
                         type="checkbox"
                         className="form-check-input"
-                        checked={overclocking}
+                        checked={pcOverclock}
                         onChange={(e) => setOverclocking(e.target.checked)}
                         id="overclocking"
                     />
@@ -89,8 +103,8 @@ const Configurator = () => {
                         <li className="list-group-item"><strong>GPU:</strong> {configuration.gpu}</li>
                         <li className="list-group-item"><strong>PSU:</strong> {configuration.psu}</li>
                         <li className="list-group-item"><strong>RAM:</strong> {configuration.ram}</li>
-                        <li className="list-group-item"><strong>Type:</strong> {configuration.type}</li>
-                        <li className="list-group-item"><strong>Price:</strong> {configuration.price}</li>
+                        <li className="list-group-item"><strong>Type:</strong> {configuration.pcType}</li>
+                        <li className="list-group-item"><strong>Price:</strong> {configuration.pcPrice}</li>
                     </ul>
                 </div>
             )}

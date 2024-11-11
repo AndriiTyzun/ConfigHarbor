@@ -25,15 +25,15 @@ public class RAM extends Component{
     @Column(name = "number_of_planks")
     private int ramNumberOfPlanks;
 
-//    @Column(name = "type")
-//    private String ramType;
-//
-//    @Column(name = "frequency")
-//    private int ramFrequency;
-
     @OneToOne(mappedBy = "ram")
     private PCConfiguration pcConfiguration;
 
     @OneToOne(mappedBy = "ram")
     private PCUpdatePackage pcUpdatePackage;
 }
+
+//    @Column(name = "type")
+//    private String ramType;
+//
+//    @Column(name = "frequency")
+//    private int ramFrequency;

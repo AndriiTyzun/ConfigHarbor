@@ -9,9 +9,10 @@ public abstract class Component {
     @Column(name = "id")
     private long componentId;
 
-//    @Column(name = "brand")
-//    private String componentBrand;
 
     @Column(name = "price")
     private String componentPrice;
 }
+
+//    @Column(name = "brand")
+//    private String componentBrand;

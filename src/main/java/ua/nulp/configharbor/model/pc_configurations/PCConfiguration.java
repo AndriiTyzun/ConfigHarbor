@@ -40,11 +40,12 @@ public class PCConfiguration {
     @Column(name = "rating")
     private int rating;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "update", referencedColumnName = "id")
-//    private PCUpdatePackage update;
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User userId;
 }
+
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "update", referencedColumnName = "id")
+//    private PCUpdatePackage update;

@@ -16,6 +16,24 @@ import ua.nulp.configharbor.model.pc_configurations.PCUpdatePackage;
 @Getter
 @Setter
 public class GPU extends Component{
+
+    @Column(name = "name")
+    private String gpuName;
+
+    @Column(name = "tdp")
+    private int gpuTDP;
+
+    @Column(name = "performance")
+    private int gpuPerformance;
+
+
+    @OneToOne(mappedBy = "gpu")
+    private PCConfiguration pcConfiguration;
+
+    @OneToOne(mappedBy = "gpu")
+    private PCUpdatePackage pcUpdatePackage;
+}
+
 //    @Column(name = "chip")
 //    private String gpuChip;
 //
@@ -39,19 +57,3 @@ public class GPU extends Component{
 //
 //    @Column(name = "shaders_tmu_rop")
 //    private String gpuSTR;
-    @Column(name = "name")
-    private String gpuName;
-
-    @Column(name = "tdp")
-    private int gpuTDP;
-
-    @Column(name = "performance")
-    private int gpuPerformance;
-
-
-    @OneToOne(mappedBy = "gpu")
-    private PCConfiguration pcConfiguration;
-
-    @OneToOne(mappedBy = "gpu")
-    private PCUpdatePackage pcUpdatePackage;
-}

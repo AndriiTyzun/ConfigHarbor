@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {useLocalState} from "../../util/localStorage";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -13,7 +12,6 @@ const Login = () => {
     const [password, setPassword] = useState("")
     const [error, setError] = useState('');
     const history = useNavigate();
-    const [jwt, setJwt] = useLocalState("", "jwt");
 
     // function sendLogInRequest(){
     //     const requestBody = {
@@ -49,12 +47,11 @@ const Login = () => {
                 return;
             }
 
-            const response = await axios.post('http://localhost:8080/api/auth/login', {
+            const response =  await axios.post('http://localhost:8080/api/auth/login', {
                 "userEmail" : email, "userPassword" : password
             });
 
-            setJwt(response.headers.get("authorization"));
-
+            localStorage.setItem('jwt', JSON.stringify(response.headers.get("authorization")));
             console.log('Login successful');
             history('/configurator');
         } catch (error) {
