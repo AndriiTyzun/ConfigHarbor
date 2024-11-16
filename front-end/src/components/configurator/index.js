@@ -36,7 +36,9 @@ const Configurator = () => {
                 pcPrice,
                 pcUpgrade,
                 pcOverclock,
-            });
+            }, {headers : {
+                    "Authorization": `Bearer ${localStorage.getItem('jwt')}`
+                }});
             console.log(response.data)
             setConfiguration(response.data);
         } catch (error) {
